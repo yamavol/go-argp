@@ -1,0 +1,15 @@
+arg0 arg1 arg2
+--help
+--version
+-a
+-abc
+-x arg
+-xarg
+--long
+--file input.txt
+--file=input.txt
+--argopt
+--argopt=arg
+-p -q -r -- -s -t -u
+-x -
+-x-
