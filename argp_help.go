@@ -49,9 +49,6 @@ func PrintOptList(w io.Writer, options []Option) {
 		if opt.Flags&OPTION_HIDDEN > 0 {
 			// don't print hidden option
 			continue
-		} else if opt.Flags&OPTION_DOC > 0 {
-			// print text as is
-			fmt.Fprintf(w, "%s\n", opt.Doc)
 		} else if empty_rune(opt.Short) && empty_str(opt.Long) && len(opt.Doc) > 0 {
 			// print category header
 			fmt.Fprintln(w, opt.Doc)

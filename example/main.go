@@ -17,7 +17,6 @@ var options = []argp.Option{
 	{Short: 'o', Long: "output", ArgName: "<file>", Flags: 0, Doc: "doc"},
 	{Short: '1', Long: "", ArgName: "", Flags: 0, Doc: "doc"},
 	{Short: ' ', Long: "", ArgName: "", Flags: 0, Doc: ""},
-	{Short: ' ', Long: "", ArgName: "", Flags: argp.OPTION_DOC, Doc: "doc"},
 	{Short: 'h', Long: "help", ArgName: "", Flags: 0, Doc: "print help"},
 	{Short: 'V', Long: "version", ArgName: "", Flags: 0, Doc: "print version"},
 }

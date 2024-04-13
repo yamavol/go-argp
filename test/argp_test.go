@@ -28,7 +28,6 @@ var options = []argp.Option{
 	{Short: ' ', Long: "fgfg", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
 	{Short: 'F', Long: "    ", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
 	{Short: 'K', Long: "kind", ArgName: "<kind>", Flags: argp.OPTION_ARG_OPTIONAL, Doc: "specify kind"},
-	{Short: ' ', Long: "    ", ArgName: "", Flags: argp.OPTION_DOC, Doc: "kind is AAA BBB or CCC. Default is AAA"},
 
 	{Short: ' ', Long: "    ", ArgName: "", Flags: 0, Doc: "CATEGORY 222:"},
 	{Short: 'h', Long: "help", ArgName: "", Flags: 0, Doc: "print help and exit"},
@@ -194,10 +193,7 @@ var helpCheckPatterns = []testPairT1{
 	},
 	// ==========
 	{
-		option: argp.Option{Short: ' ', Long: " ", ArgName: " ", Flags: 0, Doc: "CATEGORY HEADER:"},
-		expect: "CATEGORY HEADER:\n",
-	}, {
-		option: argp.Option{Short: ' ', Long: "aaa", ArgName: "ARG", Flags: argp.OPTION_DOC, Doc: "Documentation Line"},
+		option: argp.Option{Short: ' ', Long: " ", ArgName: " ", Flags: 0, Doc: "Documentation Line"},
 		expect: "Documentation Line\n",
 	}, {
 		option: argp.Option{Short: 'a', Long: "aaa", ArgName: "ARG", Flags: argp.OPTION_HIDDEN, Doc: "hidden option"},
@@ -240,7 +236,7 @@ func Test_OptionListPrinting2(t *testing.T) {
 		{Short: 'o', Long: "output", ArgName: "<file>", Flags: 0, Doc: "specify the file to output"},
 		{Short: '1', Long: "", ArgName: "", Flags: 0, Doc: "run only once"},
 		{Short: 0, Long: "", ArgName: "", Flags: 0, Doc: ""},
-		{Short: 0, Long: "", ArgName: "", Flags: argp.OPTION_DOC, Doc: "This line is for document"},
+		{Short: 0, Long: "", ArgName: "", Doc: "This line is for document"},
 	}
 
 	expect := "" +

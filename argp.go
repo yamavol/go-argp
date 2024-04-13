@@ -21,11 +21,6 @@ const (
 	// An alias option will be resolved to a non-alias option.
 	OPTION_ALIAS = 0x4
 
-	// Mark this option as "Document option". The description of this entry
-	// will be used for the documentation. Use this flag to write
-	// multi-line documentation in the usage message.
-	OPTION_DOC = 0x8
-
 	// [Private] Mark this option as "Non option". This flag is used to
 	// return the non-option argument to support option reordering
 	_OPTION_NON_OPTION_ARG = 0x40
