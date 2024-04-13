@@ -2,7 +2,6 @@
 package argp
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -24,6 +23,10 @@ const (
 	// [Private] Mark this option as "Non option". This flag is used to
 	// return the non-option argument to support option reordering
 	_OPTION_NON_OPTION_ARG = 0x20
+
+	ErrInvalid = "invalid option"
+	ErrMissing = "option requires an argument"
+	ErrTooMany = "option takes no arguments"
 )
 
 // Option struct represents a single option.
@@ -50,9 +53,9 @@ type Error struct {
 }
 
 func (e Error) Error() string {
-	if e.Long != "" && e.Short != 0 {
+	if !empty_str(e.Long) && !empty_rune(e.Short) {
 		return fmt.Sprintf("%s: --%s (-%c)", e.Message, e.Long, e.Short)
-	} else if e.Long != "" {
+	} else if !empty_str(e.Long) {
 		return fmt.Sprintf("%s: --%s", e.Message, e.Long)
 	} else {
 		return fmt.Sprintf("%s: -%c", e.Message, e.Short)
@@ -148,7 +151,7 @@ func (p *parser) short() (*Result, error) {
 	option := findShort(p.options, c)
 
 	if option == nil {
-		return nil, errors.New("invalid parameter")
+		return nil, Error{Option{Short: c}, ErrInvalid}
 	}
 
 	cstr := string(c)
@@ -167,7 +170,7 @@ func (p *parser) short() (*Result, error) {
 		p.optidx++
 		if optarg == "" {
 			if p.optidx == len(p.args) {
-				return nil, errors.New("argument missing")
+				return nil, Error{*option, ErrMissing}
 			}
 			optarg = p.args[p.optidx]
 			p.optidx++
@@ -196,7 +199,7 @@ func (p *parser) long() (*Result, error) {
 
 	option := findLong(p.options, long)
 	if option == nil {
-		return nil, errors.New("invalid parameter")
+		return nil, Error{Option{Long: long}, ErrInvalid}
 	}
 
 	// consume one token here, after valid option was found
@@ -204,7 +207,7 @@ func (p *parser) long() (*Result, error) {
 
 	if len(option.ArgName) == 0 { // No argument
 		if attached {
-			return nil, errors.New("too many arguments")
+			return nil, Error{*option, ErrTooMany}
 		}
 		return &Result{*option, long, ""}, nil
 	}
@@ -212,7 +215,7 @@ func (p *parser) long() (*Result, error) {
 	if option.Flags&OPTION_ARG_OPTIONAL == 0 {
 		if !attached {
 			if p.optidx >= len(p.args) {
-				return nil, errors.New("argument missing")
+				return nil, Error{*option, ErrMissing}
 			}
 			optarg = p.args[p.optidx]
 			p.optidx++
