@@ -10,28 +10,31 @@ import (
 )
 
 var options = []argp.Option{
-	{Short: ' ', Long: "", ArgName: "", Flags: 0, Doc: "CATEGORY 000:"},
-	{Short: 'a', Long: "", ArgName: "", Flags: 0, Doc: "enable option a"},
-	{Short: 'b', Long: "", ArgName: "", Flags: 0, Doc: "enable option b"},
-	{Short: 'c', Long: "", ArgName: "", Flags: 0, Doc: "enable option c"},
-	{Short: 'p', Long: "", ArgName: "", Flags: 0, Doc: "enable option p"},
-	{Short: 'q', Long: "", ArgName: "", Flags: 0, Doc: "enable option q"},
-	{Short: 'r', Long: "", ArgName: "", Flags: 0, Doc: "enable option r"},
-	{Short: '1', Long: "", ArgName: "", Flags: 0, Doc: "enable option 1"},
-	{Short: ' ', Long: "secret", ArgName: "", Flags: argp.OPTION_HIDDEN, Doc: "hidden option"},
+	{Doc: "CATEGORY 000:"},
+	{Short: 'a', Long: "aaa", Doc: "enable option a"},
+	{Short: 'b', Long: "bbb", Doc: "enable option b"},
+	{Short: 'c', Long: "ccc", Doc: "enable option c"},
+	{Short: 'd', Long: "ddd", ArgName: "<ARG>"},
+	{Short: 'e', Long: "eee", ArgName: "<ARG>", Flags: argp.OPTION_ARG_OPTIONAL},
 
-	{Short: ' ', Long: "      ", ArgName: "     ", Flags: 0, Doc: "CATEGORY 111:"},
+	{Short: 'p', Long: "", Doc: "enable option p"},
+	{Short: 'q', Long: "", Doc: "enable option q"},
+	{Short: 'r', Long: "", Doc: "enable option r"},
+	{Short: '1', Long: "", Doc: "enable option 1"},
+	{Short: ' ', Long: "secret", Flags: argp.OPTION_HIDDEN, Doc: "hidden option"},
+
+	{Doc: "CATEGORY 111:"},
 	{Short: 'o', Long: "output", ArgName: "<buf>", Flags: 0, Doc: "specify output buffer"},
 	{Short: 'x', Long: "xxxx", ArgName: "<arg>", Flags: 0, Doc: "enable option x"},
 	{Short: 'f', Long: "file", ArgName: "<file>", Flags: 0, Doc: "file to open"},
-	{Short: ' ', Long: "ffff", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
-	{Short: ' ', Long: "fgfg", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
-	{Short: 'F', Long: "    ", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
+	{Short: ' ', Long: "ffff", Flags: argp.OPTION_ALIAS},
+	{Short: ' ', Long: "fgfg", Flags: argp.OPTION_ALIAS},
+	{Short: 'F', Long: "    ", Flags: argp.OPTION_ALIAS},
 	{Short: 'K', Long: "kind", ArgName: "<kind>", Flags: argp.OPTION_ARG_OPTIONAL, Doc: "specify kind"},
 
-	{Short: ' ', Long: "    ", ArgName: "", Flags: 0, Doc: "CATEGORY 222:"},
-	{Short: 'h', Long: "help", ArgName: "", Flags: 0, Doc: "print help and exit"},
-	{Short: 'V', Long: "version", ArgName: "", Flags: 0, Doc: "print version and exit"},
+	{Doc: "CATEGORY 222:"},
+	{Short: 'h', Long: "help", Doc: "print help and exit"},
+	{Short: 'V', Long: "version", Doc: "print version and exit"},
 }
 
 func split(str string) []string {
@@ -160,24 +163,24 @@ type testPairT1 struct {
 var helpCheckPatterns = []testPairT1{
 	// ==========
 	{
-		option: argp.Option{Short: 'a', Long: "", ArgName: "", Flags: 0, Doc: "boolean option (short)"},
+		option: argp.Option{Short: 'a', Long: "", Doc: "boolean option (short)"},
 		expect: " -a                        boolean option (short)\n",
 	}, {
-		option: argp.Option{Short: ' ', Long: "aaa", ArgName: "", Flags: 0, Doc: "boolean option (long)"},
+		option: argp.Option{Short: ' ', Long: "aaa", Doc: "boolean option (long)"},
 		expect: "     --aaa                 boolean option (long)\n",
 	}, {
-		option: argp.Option{Short: 'a', Long: "aaa", ArgName: "", Flags: 0, Doc: "boolean option"},
+		option: argp.Option{Short: 'a', Long: "aaa", Doc: "boolean option"},
 		expect: " -a, --aaa                 boolean option\n",
 	},
 	// ==========
 	{
-		option: argp.Option{Short: 'a', Long: "", ArgName: "ARG", Flags: 0, Doc: "option with argument (short)"},
+		option: argp.Option{Short: 'a', Long: "", ArgName: "ARG", Doc: "option with argument (short)"},
 		expect: " -a ARG                    option with argument (short)\n",
 	}, {
-		option: argp.Option{Short: ' ', Long: "aaa", ArgName: "ARG", Flags: 0, Doc: "option with argument (long)"},
+		option: argp.Option{Short: ' ', Long: "aaa", ArgName: "ARG", Doc: "option with argument (long)"},
 		expect: "     --aaa ARG             option with argument (long)\n",
 	}, {
-		option: argp.Option{Short: 'a', Long: "aaa", ArgName: "ARG", Flags: 0, Doc: "option with argument"},
+		option: argp.Option{Short: 'a', Long: "aaa", ArgName: "ARG", Doc: "option with argument"},
 		expect: " -a, --aaa ARG             option with argument\n",
 	},
 	// ==========
@@ -228,14 +231,14 @@ func Test_OptionListPrinting(t *testing.T) {
 
 func Test_OptionListPrinting2(t *testing.T) {
 	option := []argp.Option{
-		{Short: ' ', Long: "", ArgName: "", Flags: 0, Doc: "OPTIONS:"},
-		{Short: 'a', Long: "", ArgName: "", Flags: 0, Doc: "enable option a"},
-		{Short: 'b', Long: "b", ArgName: "", Flags: 0, Doc: "run in mode b"},
-		{Short: 's', Long: "silent", ArgName: "", Flags: 0, Doc: "run in silent mode"},
+		{Short: ' ', Long: "", ArgName: "", Doc: "OPTIONS:"},
+		{Short: 'a', Long: "", ArgName: "", Doc: "enable option a"},
+		{Short: 'b', Long: "b", ArgName: "", Doc: "run in mode b"},
+		{Short: 's', Long: "silent", ArgName: "", Doc: "run in silent mode"},
 		{Short: 'q', Long: "", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: "this doc is ignored"},
-		{Short: 'o', Long: "output", ArgName: "<file>", Flags: 0, Doc: "specify the file to output"},
-		{Short: '1', Long: "", ArgName: "", Flags: 0, Doc: "run only once"},
-		{Short: 0, Long: "", ArgName: "", Flags: 0, Doc: ""},
+		{Short: 'o', Long: "output", ArgName: "<file>", Doc: "specify the file to output"},
+		{Short: '1', Long: "", ArgName: "", Doc: "run only once"},
+		{Short: 0, Long: "", ArgName: "", Doc: ""},
 		{Short: 0, Long: "", ArgName: "", Doc: "This line is for document"},
 	}
 
