@@ -72,9 +72,10 @@ type argFmt int
 
 const (
 	argFmtNone argFmt = iota
-	argFmtDefault
-	argFmtLongOptional
+	argFmtShortDefault
+	argFmtLongDefault
 	argFmtShortOptional
+	argFmtLongOptional
 )
 
 // Return a formatted string for printing ArgName in the help message.
@@ -87,7 +88,9 @@ func sprintfArg(arg string, argfmt argFmt) string {
 	switch argfmt {
 	case argFmtNone:
 		return ""
-	case argFmtDefault:
+	case argFmtShortDefault:
+		return fmt.Sprintf(" %s", arg)
+	case argFmtLongDefault:
 		return fmt.Sprintf(" %s", arg)
 	case argFmtLongOptional:
 		return fmt.Sprintf("[=%s]", arg)
@@ -143,7 +146,7 @@ func sprintfOptions(optReal *Option, optAlias []*Option) string {
 				token = sprintfShort(c, "", argFmtNone)
 			} else {
 				// print short name and argName
-				argfmt := argFmtDefault
+				argfmt := argFmtShortDefault
 				if optReal.Flags&OPTION_ARG_OPTIONAL > 0 {
 					argfmt = argFmtShortOptional
 				}
@@ -171,7 +174,7 @@ func sprintfOptions(optReal *Option, optAlias []*Option) string {
 				token = sprintfLong(long, "", argFmtNone)
 			} else {
 				// print long name and argName
-				argfmt := argFmtDefault
+				argfmt := argFmtLongDefault
 				if optReal.Flags&OPTION_ARG_OPTIONAL > 0 {
 					argfmt = argFmtLongOptional
 				}
