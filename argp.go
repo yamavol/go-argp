@@ -37,6 +37,11 @@ type Option struct {
 	Doc     string // Description, or a single line text for header/line
 }
 
+// Returns true if the short name or long name equals the argument
+func (o *Option) Is(name string) bool {
+	return !empty_str(name) && (name == string(o.Short) || name == o.Long)
+}
+
 // Error object implements error interface, and extends the option entry
 // which raised an error.
 type Error struct {
@@ -58,8 +63,19 @@ func (e Error) Error() string {
 // option and the argument.
 type Result struct {
 	Option
-	Input  string // The flag supplied by the
-	Optarg string // option argument
+	InputString string // The original string supplied in the argument
+	Optarg      string // option argument
+}
+
+// Return Optarg with default string
+func (p *Result) WithDefault(arg string) string {
+	if p == nil {
+		return arg
+	} else if empty_str(p.Optarg) {
+		return arg
+	} else {
+		return p.Optarg
+	}
 }
 
 type ParseResult struct {
@@ -69,11 +85,21 @@ type ParseResult struct {
 
 // Check if option with given name was specified
 func (p *ParseResult) HasOpt(long string) bool {
-	return len(p.GetOpt(long)) > 0
+	return len(p.GetOpts(long)) > 0
+}
+
+// Get the first option with given name. Returns nil if not found.
+func (p *ParseResult) GetOpt(name string) *Result {
+	opts := p.GetOpts(name)
+	if len(opts) > 0 {
+		return opts[0]
+	} else {
+		return nil
+	}
 }
 
 // Get all options with given name, both long and short
-func (p *ParseResult) GetOpt(name string) []*Result {
+func (p *ParseResult) GetOpts(name string) []*Result {
 	var results []*Result
 	for i, opt := range p.Options {
 		if opt.Short == rune(name[0]) || opt.Long == name {

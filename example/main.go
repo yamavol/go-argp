@@ -47,7 +47,7 @@ func main() {
 	}
 	// result.Options is a list of [Option]s found in order
 	for _, opt := range result.Options {
-		fmt.Printf("%s: %s\n", opt.Input, opt.Optarg)
+		fmt.Printf("%s: %s\n", opt.InputString, opt.Optarg)
 	}
 	// result.Args is a list of non-option Arguments
 	fmt.Print(result.Args)

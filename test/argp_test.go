@@ -87,17 +87,27 @@ func Test_OptionWithArgument(t *testing.T) {
 	harness.IsEqual(t, result.Options[0].Optarg, "ARG", "")
 	harness.IsEqual(t, len(result.Args), 0, "")
 
+	// option without the required argument
 	args = split("-x")
 	_, err = argp.ParseArgs(options, args)
 	harness.IsNotNil(t, err, "")
 
+	// long option without the required argument
 	args = split("--xxxx")
 	_, err = argp.ParseArgs(options, args)
 	harness.IsNotNil(t, err, "")
 
-	args = split("--xxxx --")
-	_, err = argp.ParseArgs(options, args)
+	// long option without the required argument
+	args = split("--xxxx -- -a -- -123")
+	result, err = argp.ParseArgs(options, args)
 	harness.IsNil(t, err, "")
+	harness.IsEqual(t, len(result.Options), 2, "")
+	harness.IsEqual(t, len(result.Args), 1, "")
+	harness.IsTrue(t, result.Options[0].Is("xxxx"), "")
+	harness.IsEqual(t, result.Options[0].Optarg, "--", "")
+	harness.IsTrue(t, result.Options[1].Is("a"), "")
+	harness.IsEqual(t, result.Options[1].Optarg, "", "")
+	harness.IsEqual(t, result.Args[0], "-123", "")
 }
 
 func Test_Version(t *testing.T) {
@@ -153,6 +163,62 @@ func Test_Alias(t *testing.T) {
 	harness.IsEqual(t, result.Options[2].Optarg, "input3.txt", "")
 	harness.IsEqual(t, result.Options[3].Optarg, "input4.txt", "")
 	harness.IsEqual(t, len(result.Args), 0, "")
+}
+
+func Test_OptionsAPI(t *testing.T) {
+	opts := argp.Option{
+		Short: 'a',
+		Long:  "aaa",
+	}
+	harness.IsTrue(t, opts.Is("a"), "")
+	harness.IsTrue(t, opts.Is("aaa"), "")
+	harness.IsFalse(t, opts.Is(""), "")
+}
+
+func Test_ResultAPI(t *testing.T) {
+	args := split("--ddd ARG")
+	result, err := argp.ParseArgs(options, args)
+	harness.IsNil(t, err, "")
+	harness.IsTrue(t, result.HasOpt("ddd"), "")
+	harness.IsEqual(t, len(result.GetOpts("ddd")), 1, "")
+	harness.IsNotNil(t, result.GetOpt("ddd"), "")
+	harness.IsEqual(t, result.GetOpt("ddd").Optarg, "ARG", "")
+
+	harness.IsTrue(t, result.HasOpt("d"), "")
+	harness.IsEqual(t, len(result.GetOpts("d")), 1, "")
+	harness.IsNotNil(t, result.GetOpt("d"), "")
+	harness.IsEqual(t, result.GetOpt("d").Optarg, "ARG", "")
+
+	args = split("-e123")
+	result, err = argp.ParseArgs(options, args)
+	harness.IsNil(t, err, "")
+	harness.IsTrue(t, result.HasOpt("eee"), "")
+	harness.IsEqual(t, len(result.GetOpts("eee")), 1, "")
+	harness.IsNotNil(t, result.GetOpt("eee"), "")
+	harness.IsEqual(t, result.GetOpt("eee").Optarg, "123", "")
+
+	harness.IsTrue(t, result.HasOpt("e"), "")
+	harness.IsEqual(t, len(result.GetOpts("e")), 1, "")
+	harness.IsNotNil(t, result.GetOpt("e"), "")
+	harness.IsEqual(t, result.GetOpt("e").Optarg, "123", "")
+
+	harness.IsFalse(t, result.HasOpt("@"), "")
+	harness.IsEqual(t, len(result.GetOpts("@")), 0, "")
+	harness.IsNil(t, result.GetOpt("@"), "")
+}
+
+func Test_ResultAPI_Negative(t *testing.T) {
+	result := argp.ParseResult{
+		Options: []argp.Result{},
+		Args:    []string{},
+	}
+	harness.IsFalse(t, result.HasOpt("a"), "")
+	harness.IsEqual(t, result.GetOpt("eee").WithDefault("DEFAULT"), "DEFAULT", "xxx")
+	harness.IsNil(t, result.GetOpt("@"), "")
+	harness.IsEqual(t, result.GetOpt("@").WithDefault("DEFAULT"), "DEFAULT", "")
+
+	var res *argp.Result = nil
+	harness.IsEqual(t, res.WithDefault("123"), "123", "nil call")
 }
 
 type testPairT1 struct {
