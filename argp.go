@@ -23,7 +23,7 @@ const (
 
 	// [Private] Mark this option as "Non option". This flag is used to
 	// return the non-option argument to support option reordering
-	_OPTION_NON_OPTION_ARG = 0x40
+	_OPTION_NON_OPTION_ARG = 0x20
 )
 
 // Option struct represents a single option.
