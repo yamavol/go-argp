@@ -43,47 +43,6 @@ go-argp implements a option-syntax similar to the GNU argp library. The syntax i
     -opt            ; one option can be passed only once
 
 
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-build-in help (-h and --help) message
-scan arguments into struct fields with configuration in tags
-scan into composite field types (arrays, slices, structs)
-allow for nested sub commands
-GNU command line argument rules:
-
-arguments are options when they begin with a hyphen -
-multiple options can be combined: -abc is the same as -a -b -c
-long options start with two hyphens: --abc is one option
-option names are alphanumeric characters
-options can have a value: -a 1 means that a has value 1
-option values can be separated by a space, equal sign, or nothing: -a1 -a=1 -a 1 are all equal
-options and non-options can be interleaved
-the argument -- terminates all options so that all following arguments are treated as non-options
-a single - argument is a non-option usually used to mean standard in or out streams
-options may be specified multiple times, only the last one determines its value
-options can have multiple values: -a 1 2 3 means that a is an array/slice/struct of three numbers of value [1,2,3]
-
-
-
-
-
-
-
 ## FORMAT WIDTH
 
     | -a, --longname <param> |
