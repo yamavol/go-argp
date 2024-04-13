@@ -8,7 +8,7 @@ Command line argument parser library, using similar syntax to the GNU argp inter
 ## Features
 
 - Supports GNU style option ([syntax](./syntax.md))
-- Testable, well tested API
+- Testable API
 - No conversion, only string parsing
 - Built in method for generating nice formatted help message.
 - Easy integration: only ~2 files
@@ -23,28 +23,28 @@ Command line argument parser library, using similar syntax to the GNU argp inter
 package main
 
 import (
-    "os"
+	"fmt"
+	"os"
 
-    "github.com/yamavol/go-argp"
+	"github.com/yamavol/go-argp"
 )
 
 var options = []argp.Option{
-    {Short: ' ', Long: "", ArgName: "", Flags: 0, Doc: "OPTIONS:"},
-    {Short: 'a', Long: "", ArgName: "", Flags: 0, Doc: "doc"},
-    {Short: 'b', Long: "bb", ArgName: "", Flags: 0, Doc: "doc"},
-    {Short: 's', Long: "silent", ArgName: "", Flags: 0, Doc: "doc"},
-    {Short: 'q', Long: "", ArgName: "", Flags: argp.OPTION_ALIAS, Doc: ""},
-    {Short: 'o', Long: "output", ArgName: "<file>", Flags: 0, Doc: "doc"},
-    {Short: '1', Long: "", ArgName: "", Flags: 0, Doc: "doc"},
-    {Short: ' ', Long: "", ArgName: "", Flags: 0, Doc: ""},
-    {Short: ' ', Long: "", ArgName: "", Flags: argp.OPTION_DOC, Doc: "doc"},
-    {Short: 'h', Long: "help", ArgName: "", Flags: 0, Doc: "print help"},
-    {Short: 'V', Long: "version", ArgName: "", Flags: 0, Doc: "print version"},
+	{Doc: "OPTIONS:"},
+	{Short: 'a', Long: "", Doc: "doc"},
+	{Short: 'b', Long: "bb", Doc: "doc"},
+	{Short: 's', Long: "silent", Doc: "doc"},
+	{Short: 'q', Long: "", Flags: argp.OPTION_ALIAS},
+	{Short: 'o', Long: "output", ArgName: "<file>", Doc: "doc"},
+	{Short: '1', Long: "", Doc: "doc"},
+	{Doc: ""},
+	{Short: 'h', Long: "help", Doc: "print help"},
+	{Short: 'V', Long: "version", Doc: "print version"},
 }
 
 func main() {
-    // argp.Parse(options) or argp.ParseArgs(options, os.Args[1:])
-    result, err := argp.Parse(options)
+	// argp.Parse(options) == argp.ParseArgs(options, os.Args[1:])
+	result, err := argp.Parse(options)
 
 	if err != nil {
 		fmt.Printf("error: %s", err)
@@ -52,28 +52,29 @@ func main() {
 	}
 
 	if result.HasOpt("help") {
-        // Prints usage and option list. 
-        //   Usage: cmd [options...] ARG1 ARG2
-        //   OPTIONS:
-        //    -a                        doc
-        //    -b, --bb                  doc
-        // 
-        // argp.PrintOptList() prints without the usage line
-		argp.PrintUsage(os.Stdout, options, "cmd", "ARG1 ARG2")
-        return
+		// Prints usage and option list.
+        // ```
+		//   Usage: cmd [options...] ARG1 ARG2
+		//   OPTIONS:
+		//    -a                        doc
+		//    -b, --bb                  doc
+		// ```
+		// argp.PrintOptList() prints without the usage line
+		argp.PrintUsage(os.Stdout, options, "cmd", "ARG1 ARG2...")
+		return
 	}
 	if result.HasOpt("version") {
-		fmt.Println("1.0.0")
-        return
+		fmt.Println("0.0.0")
+		return
 	}
-    // result.Options is a list of [Option]s found in order
+	// result.Options is a list of [Option]s found in order
 	for _, opt := range result.Options {
-		fmt.Printf("%s: %s\n", opt.Input, opt.Optarg)
+		fmt.Printf("%s: %s\n", opt.InputString, opt.Optarg)
 	}
-    // result.Args is a list of non-option Arguments
+	// result.Args is a list of non-option Arguments
 	fmt.Print(result.Args)
-    
 }
+
 ```
 
 ## Guidance
@@ -86,6 +87,5 @@ Other packages offers better usability and readability. Such features include su
 
 ## License
 
+MIT
 
-
-## res
