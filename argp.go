@@ -105,7 +105,7 @@ func (p *ParseResult) GetOpt(name string) *Result {
 func (p *ParseResult) GetOpts(name string) []*Result {
 	var results []*Result
 	for i, opt := range p.Options {
-		if opt.Short == rune(name[0]) || opt.Long == name {
+		if string(opt.Short) == name || opt.Long == name {
 			results = append(results, &p.Options[i])
 		}
 	}
